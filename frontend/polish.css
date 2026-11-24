@@ -1,0 +1,102 @@
+/* ==========================================================================
+   Pulse polish layer (loads LAST)
+   1. Theme-switch flicker guard   2. Professional typography
+   3. Settings / theme window redesign
+   ========================================================================== */
+
+/* ---------- 1. flicker guard ----------
+   While data-switching is set (App.jsx sets it for the frames in which the theme
+   swaps) nothing may animate, so every surface changes colour in the same frame. */
+#app[data-switching],#app[data-switching] *,#app[data-switching] *::before,#app[data-switching] *::after{
+  transition:none!important;transition-duration:0s!important;transition-delay:0s!important}
+/* Replace the old catch-all transition (it animated gradients/shadows and desynced from text colour). */
+#app .topbar,#app .side,#app .scroll-area,#app .card,#app .metric,#app .hero,#app .side-info,#app .nav button,#app .btn{
+  transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+#app .metric:hover{transform:none}
+/* Keep wallpaper / artwork layers on their own GPU layer so they are not re-decoded on theme change. */
+#app::before,#app::after{transform:translateZ(0);backface-visibility:hidden}
+#app{background-clip:padding-box}
+html,body{background:transparent}
+
+/* ---------- 2. typography ---------- */
+#app,#app button,#app input,#app select,#app textarea{
+  font-family:"Segoe UI Variable Text","Segoe UI Variable","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+#app{font-size:13px;line-height:1.5;font-weight:400;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  font-kerning:normal;font-variant-numeric:tabular-nums lining-nums}
+#app[data-theme] h1{font-size:22px;font-weight:600;line-height:1.25}
+#app[data-theme] .section-row h2,#app[data-theme] .card-title{font-weight:600}
+/* only three weights are used anywhere: 400 / 500 / 600 */
+#app[data-theme] strong,#app[data-theme] b,#app[data-theme] .metric-value,#app[data-theme] .sensor-value,
+#app[data-theme] .brand strong,#app[data-theme] .settings-heading h2{font-weight:600}
+#app[data-theme] .metric-value{font-size:26px;letter-spacing:-.01em!important}
+#app[data-theme] .metric-name,#app[data-theme] .nav button{font-weight:500}
+#app[data-theme] .brand strong{font-size:16px;letter-spacing:.01em!important}
+#app[data-theme] .brand small{font-size:11px}
+
+/* ---------- 3. settings window ---------- */
+#app[data-theme] .settings-backdrop{background:rgba(0,0,0,.5);padding:24px}
+#app[data-theme] .settings-dialog{
+  width:min(94vw,620px);max-height:min(90vh,760px);padding:0;overflow:hidden;display:flex;flex-direction:column;
+  border-radius:12px;background:var(--c-surface-solid,var(--c-surface));
+  border:1px solid var(--c-border-strong);box-shadow:var(--shadow-lg);backdrop-filter:none!important}
+#app[data-theme] .settings-dialog.confirm-dialog{display:block;overflow:visible;padding:22px 24px;width:min(92vw,440px)}
+#app[data-theme] .settings-heading{
+  margin:0;padding:16px 20px 14px;border-bottom:1px solid var(--c-border-soft);align-items:center;flex:0 0 auto}
+#app[data-theme] .settings-heading h2{font-size:16px;line-height:1.3;margin:0}
+#app[data-theme] .settings-heading p{font-size:12px;margin:2px 0 0;color:var(--c-text3)}
+#app[data-theme] .settings-close{width:28px;height:28px;border-radius:6px;border:0;background:transparent;color:var(--c-text3)}
+#app[data-theme] .settings-close:hover{background:var(--c-hover);color:var(--c-text)}
+
+/* scrollable body = everything between header and footer */
+#app[data-theme] .settings-dialog>.settings-theme-area,
+#app[data-theme] .settings-dialog>.settings-group{flex:0 0 auto}
+#app[data-theme] .settings-dialog{overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable}
+#app[data-theme] .settings-heading{position:sticky;top:0;z-index:2;background:var(--c-surface-solid,var(--c-surface))}
+#app[data-theme] .settings-footer{
+  position:sticky;bottom:0;margin:0;padding:11px 20px;border-top:1px solid var(--c-border-soft);
+  background:var(--c-surface-solid,var(--c-surface));font-size:11.5px;color:var(--c-text3);display:flex;align-items:center;gap:8px}
+
+#app[data-theme] .settings-theme-area,#app[data-theme] .settings-group{
+  margin:0;padding:16px 20px;border-top:0;border-bottom:1px solid var(--c-border-soft)}
+#app[data-theme] .settings-group{display:flex;align-items:center;justify-content:space-between;gap:24px}
+#app[data-theme] .settings-theme-area .settings-description{margin-bottom:4px}
+#app[data-theme] .settings-description strong{display:block;font-size:13px;font-weight:600;line-height:1.35}
+#app[data-theme] .settings-description small{font-size:12px;line-height:1.5;max-width:340px;margin-top:2px;color:var(--c-text3)}
+#app[data-theme] .settings-theme-area .settings-description small{max-width:none}
+
+#app[data-theme] .theme-group{margin-top:16px}
+#app[data-theme] .theme-group-title{font-size:12px;font-weight:600;color:var(--c-text2);margin:0 0 8px}
+#app[data-theme] .theme-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px}
+#app[data-theme] .theme-card{
+  position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:6px 6px 9px;
+  border-radius:9px;border:1px solid var(--c-border);background:var(--c-surface2);box-shadow:none;text-align:left;cursor:pointer;
+  transition:border-color .12s ease,background-color .12s ease}
+#app[data-theme] .theme-card:hover{border-color:var(--c-border-strong);background:var(--c-hover)}
+#app[data-theme] .theme-card:focus-visible{outline:2px solid var(--c-accent);outline-offset:2px}
+#app[data-theme] .theme-card.active{border-color:var(--c-accent);box-shadow:0 0 0 1px var(--c-accent);background:var(--c-surface2)}
+#app[data-theme] .theme-card strong{font-size:12.5px;font-weight:600;margin:8px 4px 0;line-height:1.3;color:var(--c-text)}
+#app[data-theme] .theme-card small{font-size:11.5px;margin:1px 4px 0;line-height:1.3;color:var(--c-text3)}
+#app[data-theme] .theme-selected{display:none}
+
+/* mini window preview inside each tile */
+#app[data-theme] .theme-swatch{position:relative;display:block;width:100%;height:56px;border-radius:6px;overflow:hidden}
+#app[data-theme] .theme-swatch i{position:absolute;box-shadow:none!important;border-radius:3px}
+#app[data-theme] .theme-swatch i:nth-child(1){left:5px;top:5px;bottom:5px;width:22%;height:auto}
+#app[data-theme] .theme-swatch i:nth-child(2){left:calc(22% + 11px);right:5px;top:5px;width:auto;height:14px}
+#app[data-theme] .theme-swatch i:nth-child(3){left:calc(22% + 11px);right:38%;top:24px;bottom:5px;width:auto;height:auto}
+#app[data-theme] .theme-check{
+  position:absolute;right:5px;bottom:5px;width:16px;height:16px;border-radius:50%;display:grid;place-items:center;
+  background:var(--c-accent);color:var(--c-on-accent);opacity:0;transform:scale(.8);transition:none}
+#app[data-theme] .theme-check svg{stroke-width:3}
+#app[data-theme] .theme-card.active .theme-check{opacity:1;transform:none}
+
+/* controls */
+#app[data-theme] .interval-options{display:inline-flex;gap:2px;padding:2px;border-radius:8px;border:1px solid var(--c-border);background:var(--c-surface2)}
+#app[data-theme] .interval-options button{height:26px;padding:0 12px;border-radius:6px;font-size:12px;font-weight:500}
+#app[data-theme] .wall-actions .btn{height:30px}
+#app[data-theme] .toggle{flex:0 0 auto}
+
+@media(max-width:540px){
+  #app[data-theme] .theme-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #app[data-theme] .settings-group{flex-wrap:wrap}}

@@ -16,7 +16,7 @@ Open <http://localhost:8000/website/>. The page uses plain HTML, CSS and JavaScr
 
 A GitHub Actions workflow is included at `.github/workflows/deploy-website.yml`.
 
-1. Push the repository to GitHub on the `main` branch.
+1. Push the repository to GitHub on the `main` or `master` branch (whichever is your default branch).
 2. Open **Settings → Pages** in the repository.
 3. Set **Build and deployment → Source** to **GitHub Actions**.
 4. Open **Actions** and run **Deploy website to GitHub Pages**, or push a change to `website/`.
